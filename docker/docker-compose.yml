@@ -1,0 +1,42 @@
+version: '3'
+services:
+  spark:
+    container_name: spark
+    build:
+      context: ..
+      dockerfile: ./docker/spark/Dockerfile
+    env_file:
+      - ./docker.env
+    ports:
+      - 8080:8080
+      - 4040:4040
+    volumes:
+      - ../docker/spark/conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
+      - ../docker/spark/conf/log4j.properties:/opt/spark/conf/log4j.properties
+      - ../interview-challenge-app/:/opt/interview-challenge-app/
+    depends_on:
+      - s3
+    stdin_open: true
+    tty: true
+
+  s3:
+    container_name: s3
+    image: minio/minio
+    env_file:
+      - ./docker.env
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /s3 --console-address ":9001"
+
+  s3-setup:
+    container_name: s3-setup
+    image: minio/mc
+    depends_on:
+      - s3
+    env_file:
+      - ./docker.env
+    volumes:
+      - ./minio/setup.sh:/setup.sh
+      - ./minio/data/:/data/
+    entrypoint: ./setup.sh

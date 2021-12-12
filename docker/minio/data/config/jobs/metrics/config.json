@@ -1,0 +1,10 @@
+{
+    "groupby_key": ["datehour", "domain", "user.country"],
+    "output_cols": [
+        "datehour", "domain", "user_country", "pageviews", "pageviews_with_consent", "consents_asked", "consents_given",
+        "consents_given_with_consent", "avg_pageviews_per_user"
+    ],
+    "s3_input_path":"s3a://interview-challenge/data/events/",
+    "s3_output_path_hist":"s3a://interview-challenge/data/metrics/hist/",
+    "s3_output_path_current":"s3a://interview-challenge/data/metrics/current/"
+}
